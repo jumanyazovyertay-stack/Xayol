@@ -2,8 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Xayol mavzusi – Savol va javob kartalari</title>
-
+<title>Xayol kartalari – WOW efekti</title>
 <style>
 body {
     margin: 0;
@@ -15,20 +14,21 @@ body {
     align-items: center;
     justify-content: center;
     color: #fff;
+    overflow: hidden;
 }
 
 h1 {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 p {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .container {
     display: grid;
     grid-template-columns: repeat(5, 160px);
-    gap: 18px;
+    gap: 15px;
 }
 
 .card {
@@ -71,89 +71,100 @@ p {
     background: linear-gradient(135deg, #11998e, #38ef7d);
     color: #003333;
 }
+
+/* Yulduz animatsiyasi */
+.star {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: yellow;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: fly 1s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes fly {
+    0% {transform: translate(0, 0) scale(1);}
+    50% {transform: translate(calc(var(--x) * 1px), calc(var(--y) * -1px)) scale(1.5);}
+    100% {transform: translate(calc(var(--x) * 2px), calc(var(--y) * -2px)) scale(0);}
+}
 </style>
 </head>
-
 <body>
 
-<h1>🧠 Xayol mavzusi – Interaktiv o‘yin</h1>
-<p>1 marta bosing – savol | 2 marta bosing – javob</p>
+<h1>🧠 Xayol kartalari – WOW efekti</h1>
+<p>1-bosish: Savol | 2-bosish: Javob + WOW</p>
 
 <div class="container" id="game"></div>
 
+<audio id="wowSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+
 <script>
 const cardsData = [
-{
-q: "Xayol nima?",
-a: "Xayol — ongda yangi obraz va tasavvurlarni yaratish jarayoni."
-},
-{
-q: "Xayolning asosiy turlari qaysilar?",
-a: "Qayta tiklovchi va ijodiy xayol."
-},
-{
-q: "Ijodiy xayol nima?",
-a: "Yangi, original obraz va g‘oyalarni yaratishga qaratilgan xayol."
-},
-{
-q: "Qayta tiklovchi xayol nima?",
-a: "Avval ko‘rilgan yoki eshitilgan narsani ongda qayta tiklash."
-},
-{
-q: "Xayol tafakkur bilan qanday bog‘langan?",
-a: "Xayol tafakkur asosida rivojlanadi va uni boyitadi."
-},
-{
-q: "Bolalarda xayol qanday rivojlanadi?",
-a: "O‘yin, ertak va rasm chizish orqali rivojlanadi."
-},
-{
-q: "Xayol inson faoliyatida qanday rol o‘ynaydi?",
-a: "Maqsad qo‘yish va kelajakni rejalashda yordam beradi."
-},
-{
-q: "Xayol irodaga qanday ta’sir qiladi?",
-a: "Maqsadni ko‘z oldiga keltirib, irodani mustahkamlaydi."
-},
-{
-q: "Xayol real hayotdan uzilib ketishi mumkinmi?",
-a: "Ha, haddan tashqari bo‘lsa, reallikdan uzoqlashtiradi."
-},
-{
-q: "Xayolni rivojlantirish yo‘llari?",
-a: "Kitob o‘qish, ijodiy mashqlar va muammoli vaziyatlar."
-}
+{q:"Xayol nima?", a:"Xayol — ongda yangi obraz va tasavvurlarni yaratish jarayoni."},
+{q:"Xayolning asosiy turlari qaysilar?", a:"Qayta tiklovchi va ijodiy xayol."},
+{q:"Ijodiy xayol nima?", a:"Yangi, original obraz va g‘oyalarni yaratishga qaratilgan xayol."},
+{q:"Qayta tiklovchi xayol nima?", a:"Avval ko‘rilgan yoki eshitilgan narsani ongda qayta tiklash."},
+{q:"Xayol tafakkur bilan qanday bog‘langan?", a:"Xayol tafakkur asosida rivojlanadi va uni boyitadi."},
+{q:"Bolalarda xayol qanday rivojlanadi?", a:"O‘yin, ertak va rasm chizish orqali rivojlanadi."},
+{q:"Xayol inson faoliyatida qanday rol o‘ynaydi?", a:"Maqsad qo‘yish va kelajakni rejalashda yordam beradi."},
+{q:"Xayol irodaga qanday ta’sir qiladi?", a:"Maqsadni ko‘z oldiga keltirib, irodani mustahkamlaydi."},
+{q:"Xayol real hayotdan uzilib ketishi mumkinmi?", a:"Ha, haddan tashqari bo‘lsa, reallikdan uzoqlashtiradi."},
+{q:"Xayolni rivojlantirish yo‘llari?", a:"Kitob o‘qish, ijodiy mashqlar va muammoli vaziyatlar."}
 ];
 
 const game = document.getElementById("game");
+const wowSound = document.getElementById("wowSound");
 
-cardsData.forEach((item, index) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.textContent = `Karta ${index + 1}`;
+cardsData.forEach((item,index)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.textContent=`Karta ${index+1}`;
 
-    let state = 0; // 0-berk, 1-savol, 2-javob
+    let state=0; // 0-berk,1-savol,2-javob
 
-    card.addEventListener("click", () => {
-        if (state === 0) {
-            card.textContent = item.q;
+    card.addEventListener("click",()=>{
+        if(state===0){
+            card.textContent=item.q;
             card.classList.add("question");
-            state = 1;
-        } else if (state === 1) {
-            card.textContent = item.a;
+            state=1;
+        }else if(state===1){
+            card.textContent=item.a;
             card.classList.remove("question");
             card.classList.add("answer");
-            state = 2;
-        } else {
-            card.textContent = `Karta ${index + 1}`;
+            state=2;
+
+            // WOW effekt
+            createStars(card);
+            wowSound.currentTime=0;
+            wowSound.play();
+        }else{
+            card.textContent=`Karta ${index+1}`;
             card.classList.remove("answer");
-            state = 0;
+            state=0;
         }
     });
 
     game.appendChild(card);
 });
-</script>
 
+// Yulduz yaratish funksiyasi
+function createStars(card){
+    for(let i=0;i<5;i++){
+        const star=document.createElement("div");
+        star.className="star";
+        // Tasodifiy harakat
+        star.style.setProperty('--x', (Math.random()*100-50).toFixed(0));
+        star.style.setProperty('--y', (Math.random()*100-50).toFixed(0));
+        // Karta pozitsiyasiga joylash
+        const rect=card.getBoundingClientRect();
+        star.style.left=(rect.left+rect.width/2-10)+"px";
+        star.style.top=(rect.top+rect.height/2-10)+"px";
+        document.body.appendChild(star);
+        // Animatsiya tugagach o'chirish
+        setTimeout(()=>{star.remove()},1000);
+    }
+}
+</script>
 </body>
 </html>
