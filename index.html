@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Xayol kartalari – WOW efekti</title>
+<title>Xayol kartalari – Qarsak efekti</title>
 <style>
 body {
     margin: 0;
@@ -17,13 +17,8 @@ body {
     overflow: hidden;
 }
 
-h1 {
-    margin-bottom: 5px;
-}
-
-p {
-    margin-bottom: 20px;
-}
+h1 { margin-bottom: 5px; }
+p { margin-bottom: 20px; }
 
 .container {
     display: grid;
@@ -92,12 +87,13 @@ p {
 </head>
 <body>
 
-<h1>🧠 Xayol kartalari – WOW efekti</h1>
-<p>1-bosish: Savol | 2-bosish: Javob + WOW</p>
+<h1>🧠 Xayol kartalari – Qarsak effekti</h1>
+<p>1-bosish: Savol | 2-bosish: Javob + Qarsak</p>
 
 <div class="container" id="game"></div>
 
-<audio id="wowSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+<!-- Applause ovozi -->
+<audio id="applause" src="https://www.soundjay.com/human/sounds/applause-01.mp3" preload="auto"></audio>
 
 <script>
 const cardsData = [
@@ -114,7 +110,7 @@ const cardsData = [
 ];
 
 const game = document.getElementById("game");
-const wowSound = document.getElementById("wowSound");
+const applause = document.getElementById("applause");
 
 cardsData.forEach((item,index)=>{
     const card=document.createElement("div");
@@ -134,10 +130,11 @@ cardsData.forEach((item,index)=>{
             card.classList.add("answer");
             state=2;
 
-            // WOW effekt
+            // Qarsak + yulduz
             createStars(card);
-            wowSound.currentTime=0;
-            wowSound.play();
+            applause.currentTime=0;
+            applause.playbackRate = 0.8; // sekinroq ijro
+            applause.play();
         }else{
             card.textContent=`Karta ${index+1}`;
             card.classList.remove("answer");
@@ -153,18 +150,16 @@ function createStars(card){
     for(let i=0;i<5;i++){
         const star=document.createElement("div");
         star.className="star";
-        // Tasodifiy harakat
         star.style.setProperty('--x', (Math.random()*100-50).toFixed(0));
         star.style.setProperty('--y', (Math.random()*100-50).toFixed(0));
-        // Karta pozitsiyasiga joylash
         const rect=card.getBoundingClientRect();
         star.style.left=(rect.left+rect.width/2-10)+"px";
         star.style.top=(rect.top+rect.height/2-10)+"px";
         document.body.appendChild(star);
-        // Animatsiya tugagach o'chirish
         setTimeout(()=>{star.remove()},1000);
     }
 }
 </script>
+
 </body>
 </html>
