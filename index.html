@@ -1,101 +1,158 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <title>Xayol mavzusi – Interaktiv karta o‘yini</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-        }
+<meta charset="UTF-8">
+<title>Xayol mavzusi – Savol va javob kartalari</title>
 
-        h1 {
-            margin-bottom: 20px;
-        }
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1d2671, #c33764);
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
 
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(5, 150px);
-            gap: 15px;
-        }
+h1 {
+    margin-bottom: 10px;
+}
 
-        .card {
-            width: 150px;
-            height: 100px;
-            background: #ffffff;
-            color: #333;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-weight: bold;
-            transition: transform 0.3s, background 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            padding: 10px;
-        }
+p {
+    margin-bottom: 25px;
+}
 
-        .card:hover {
-            transform: scale(1.05);
-        }
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 160px);
+    gap: 18px;
+}
 
-        .card.open {
-            background: #ffeb3b;
-        }
-    </style>
+.card {
+    height: 110px;
+    border-radius: 16px;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.4s, box-shadow 0.4s;
+    animation: float 3s ease-in-out infinite;
+}
+
+.card:nth-child(even) {
+    background: linear-gradient(135deg, #ff9966, #ff5e62);
+}
+
+.card:hover {
+    transform: scale(1.08) rotate(1deg);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+.question {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+}
+
+.answer {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #003333;
+}
+</style>
 </head>
+
 <body>
 
-<h1>🧠 Xayol mavzusi – Savolli kartalar</h1>
-<p>Kartani bosing va savolga javob bering</p>
+<h1>🧠 Xayol mavzusi – Interaktiv o‘yin</h1>
+<p>1 marta bosing – savol | 2 marta bosing – javob</p>
 
-<div class="game-container" id="game"></div>
+<div class="container" id="game"></div>
 
 <script>
-    const questions = [
-        "Xayol nima?",
-        "Xayol va tasavvur o‘rtasidagi farq nimada?",
-        "Ijodiy xayolga misol keltiring",
-        "Qayta tiklovchi xayol nima?",
-        "Xayol inson faoliyatiga qanday ta’sir qiladi?",
-        "Xayolning bolalar rivojidagi ahamiyati",
-        "Xayol va tafakkur o‘rtasidagi bog‘liqlik",
-        "Xayol real hayotdan ajralib ketishi mumkinmi?",
-        "Kasb tanlashda xayolning o‘rni",
-        "Xayolni rivojlantirish usullari"
-    ];
+const cardsData = [
+{
+q: "Xayol nima?",
+a: "Xayol — ongda yangi obraz va tasavvurlarni yaratish jarayoni."
+},
+{
+q: "Xayolning asosiy turlari qaysilar?",
+a: "Qayta tiklovchi va ijodiy xayol."
+},
+{
+q: "Ijodiy xayol nima?",
+a: "Yangi, original obraz va g‘oyalarni yaratishga qaratilgan xayol."
+},
+{
+q: "Qayta tiklovchi xayol nima?",
+a: "Avval ko‘rilgan yoki eshitilgan narsani ongda qayta tiklash."
+},
+{
+q: "Xayol tafakkur bilan qanday bog‘langan?",
+a: "Xayol tafakkur asosida rivojlanadi va uni boyitadi."
+},
+{
+q: "Bolalarda xayol qanday rivojlanadi?",
+a: "O‘yin, ertak va rasm chizish orqali rivojlanadi."
+},
+{
+q: "Xayol inson faoliyatida qanday rol o‘ynaydi?",
+a: "Maqsad qo‘yish va kelajakni rejalashda yordam beradi."
+},
+{
+q: "Xayol irodaga qanday ta’sir qiladi?",
+a: "Maqsadni ko‘z oldiga keltirib, irodani mustahkamlaydi."
+},
+{
+q: "Xayol real hayotdan uzilib ketishi mumkinmi?",
+a: "Ha, haddan tashqari bo‘lsa, reallikdan uzoqlashtiradi."
+},
+{
+q: "Xayolni rivojlantirish yo‘llari?",
+a: "Kitob o‘qish, ijodiy mashqlar va muammoli vaziyatlar."
+}
+];
 
-    const game = document.getElementById("game");
+const game = document.getElementById("game");
 
-    questions.forEach((question, index) => {
-        const card = document.createElement("div");
-        card.classList.add("card");
-        card.textContent = `Karta ${index + 1}`;
+cardsData.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.textContent = `Karta ${index + 1}`;
 
-        let opened = false;
+    let state = 0; // 0-berk, 1-savol, 2-javob
 
-        card.addEventListener("click", () => {
-            if (!opened) {
-                card.textContent = question;
-                card.classList.add("open");
-                opened = true;
-            } else {
-                card.textContent = `Karta ${index + 1}`;
-                card.classList.remove("open");
-                opened = false;
-            }
-        });
-
-        game.appendChild(card);
+    card.addEventListener("click", () => {
+        if (state === 0) {
+            card.textContent = item.q;
+            card.classList.add("question");
+            state = 1;
+        } else if (state === 1) {
+            card.textContent = item.a;
+            card.classList.remove("question");
+            card.classList.add("answer");
+            state = 2;
+        } else {
+            card.textContent = `Karta ${index + 1}`;
+            card.classList.remove("answer");
+            state = 0;
+        }
     });
+
+    game.appendChild(card);
+});
 </script>
 
 </body>
