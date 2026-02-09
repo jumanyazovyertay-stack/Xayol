@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Xayol mavzusi – Interaktiv karta o‘yini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(5, 150px);
+            gap: 15px;
+        }
+
+        .card {
+            width: 150px;
+            height: 100px;
+            background: #ffffff;
+            color: #333;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            padding: 10px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card.open {
+            background: #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🧠 Xayol mavzusi – Savolli kartalar</h1>
+<p>Kartani bosing va savolga javob bering</p>
+
+<div class="game-container" id="game"></div>
+
+<script>
+    const questions = [
+        "Xayol nima?",
+        "Xayol va tasavvur o‘rtasidagi farq nimada?",
+        "Ijodiy xayolga misol keltiring",
+        "Qayta tiklovchi xayol nima?",
+        "Xayol inson faoliyatiga qanday ta’sir qiladi?",
+        "Xayolning bolalar rivojidagi ahamiyati",
+        "Xayol va tafakkur o‘rtasidagi bog‘liqlik",
+        "Xayol real hayotdan ajralib ketishi mumkinmi?",
+        "Kasb tanlashda xayolning o‘rni",
+        "Xayolni rivojlantirish usullari"
+    ];
+
+    const game = document.getElementById("game");
+
+    questions.forEach((question, index) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.textContent = `Karta ${index + 1}`;
+
+        let opened = false;
+
+        card.addEventListener("click", () => {
+            if (!opened) {
+                card.textContent = question;
+                card.classList.add("open");
+                opened = true;
+            } else {
+                card.textContent = `Karta ${index + 1}`;
+                card.classList.remove("open");
+                opened = false;
+            }
+        });
+
+        game.appendChild(card);
+    });
+</script>
+
+</body>
+</html>
